@@ -40,12 +40,6 @@ def logout():
 def signup():
     signup_form = SignupForm()
 
-    print "SU FORM {0} {1} {2}".format(
-        signup_form.email.data,
-        signup_form.username.data,
-        signup_form.password.data
-    )
-
     if signup_form.validate_on_submit():
         new_user = UserModel(
             email=signup_form.email.data,
@@ -73,10 +67,6 @@ def dashboard():
 @login_required
 def create_post():
     post_form = PostForm()
-
-    print "CURRENT USER: {0}".format(current_user)
-    print "FORM IS VALID: {0}".format(post_form.validate_on_submit())
-    print "FORM: {0} {1}".format(post_form.header.data, post_form.body.data)
 
     if post_form.validate_on_submit():
         new_post = PostModel(
