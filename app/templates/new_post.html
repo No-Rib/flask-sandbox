@@ -1,0 +1,25 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+New post
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='new_post.css')}}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+      <form class="form-new-post" method="POST" action="/new_post">
+        <h2 class="form-new-post-heading">Tell everyone what's up:</h2>
+        {{ form.hidden_tag() }}
+        {{ wtf.form_field(form.header) }}
+        {{ wtf.form_field(form.body) }}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Post!</button>
+      </form>
+
+    </div> <!-- /container -->
+{% endblock %}
