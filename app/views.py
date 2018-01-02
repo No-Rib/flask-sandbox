@@ -80,6 +80,7 @@ def create_post():
             header=post_form.header.data,
             body=post_form.body.data,
             user_id=current_user.id,
+            username=current_user.username,
         )
         db.session.add(new_post)
         db.session.commit()

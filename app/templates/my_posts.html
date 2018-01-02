@@ -16,7 +16,7 @@
     <h1> {{ username }}'s posts: </h1>
     <div class="col-lg-12">
     {% for post in posts %}
-        <h4> {{ post.header }} </h4>
+        <h4> {{ post.header }} by {{post.username}} </h4>
         <p> {{ post.body }} </p>
     {% endfor %}
     </div>

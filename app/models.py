@@ -28,6 +28,7 @@ class PostModel(db.Model):
     header = db.Column(db.String(80))
     body = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    username = db.Column(db.String(15))
 
     @classmethod
     def load(cls, post_id):
