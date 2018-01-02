@@ -8,6 +8,13 @@ from app.models import UserModel, PostModel
 
 
 @app.route("/")
+def homepage():
+    if current_user.is_authenticated:
+        return redirect(url_for("my_posts"))
+    else:
+        return redirect(url_for("index"))
+
+
 @app.route("/index")
 def index():
     return render_template("index.html")
@@ -72,7 +79,7 @@ def create_post():
         new_post = PostModel(
             header=post_form.header.data,
             body=post_form.body.data,
-            user_id=current_user.username,
+            user_id=current_user.id,
         )
         db.session.add(new_post)
         db.session.commit()
@@ -80,3 +87,16 @@ def create_post():
         return "<h1>New post has been created!</h1>"
 
     return render_template("new_post.html", form=post_form)
+
+
+@app.route("/my_posts", methods=["GET"])
+def usere_posts():
+
+    posts = PostModel.query.filter_by(user_id=current_user.id)
+
+    kwargs = {
+        "username": current_user.username,
+        "posts": posts,
+    }
+
+    return render_template("my_posts.html", **kwargs)
