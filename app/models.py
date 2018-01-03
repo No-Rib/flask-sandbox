@@ -1,3 +1,5 @@
+import datetime
+
 from flask_login import UserMixin
 
 from app import db, lm
@@ -29,6 +31,7 @@ class PostModel(db.Model):
     body = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     username = db.Column(db.String(15))
+    date_created = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow())
 
     @classmethod
     def load(cls, post_id):
