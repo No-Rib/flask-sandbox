@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db
 from app.forms import LoginForm, SignupForm, PostForm
 from app.models import UserModel, PostModel
+from app.tags import TagsDriver
 
 
 @app.route("/")
@@ -85,13 +86,16 @@ def create_post():
         db.session.add(new_post)
         db.session.commit()
 
+        tags = [raw_tag.strip() for raw_tag in post_form.tags.data.split(",")]
+        TagsDriver.set_tags(new_post.id, tags)
+
         return "<h1>New post has been created!</h1>"
 
     return render_template("new_post.html", form=post_form)
 
 
 @app.route("/my_posts", methods=["GET"])
-def usere_posts():
+def user_posts():
 
     posts = PostModel.query.filter_by(user_id=current_user.id)
 
