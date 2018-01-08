@@ -102,3 +102,6 @@ ENV/
 
 # flake8rc
 .flake8rc
+
+# redis password config
+redis-password.conf
