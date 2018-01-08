@@ -86,7 +86,7 @@ def create_post():
         db.session.add(new_post)
         db.session.commit()
 
-        tags = [raw_tag.strip() for raw_tag in post_form.tags.data.split(",")]
+        tags = set(post_form.tags.data.split())
         TagsDriver.set_tags(new_post.id, tags)
 
         return "<h1>New post has been created!</h1>"
@@ -105,3 +105,12 @@ def user_posts():
     }
 
     return render_template("my_posts.html", **kwargs)
+
+
+@app.route("/post/<post_id>", methods=["GET"])
+def post_page(post_id):
+
+    post = PostModel.load(post_id)
+    tags = ", ".join(sorted(TagsDriver.get_tags(post_id)))
+
+    return render_template("post_page.html", post=post, tags=tags)
