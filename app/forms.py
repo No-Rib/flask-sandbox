@@ -21,3 +21,7 @@ class PostForm(FlaskForm):
     header = StringField("header", validators=[InputRequired(), Length(min=1, max=80)])
     body = StringField("body", validators=[InputRequired(), Length(min=1, max=500)])
     tags = StringField("tags", validators=[Length(max=500)])
+
+
+class TagSearchForm(FlaskForm):
+    tags = StringField("tags", validators=[Length(max=500)])

@@ -1,4 +1,5 @@
 """Provides tag driver class to Redis database."""
+from collections import defaultdict
 
 from app import redis
 
@@ -51,3 +52,20 @@ class TagsDriver(object):
         """
 
         return cls.__db__.smembers(cls._get_fi_key(post_id))
+
+    @classmethod
+    def search_posts(cls, tags):
+        """Search posts by tags.
+
+        Post that have multiple tags from query are prioritized.
+
+        rvalue: (bool, iterator) --- <has_posts, post_ids>
+        """
+
+        result = defaultdict(int)
+        for tag in tags:
+            posts_ids = cls.get_posts(tag)
+            for post_id in posts_ids:
+                result[post_id] += 1
+
+        return bool(result), (key for key, value in sorted(result.iteritems(), key=lambda (k, v): (v, k)))

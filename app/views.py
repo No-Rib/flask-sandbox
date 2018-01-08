@@ -3,7 +3,7 @@ from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import app, db
-from app.forms import LoginForm, SignupForm, PostForm
+from app.forms import LoginForm, SignupForm, PostForm, TagSearchForm
 from app.models import UserModel, PostModel
 from app.tags import TagsDriver
 
@@ -114,3 +114,30 @@ def post_page(post_id):
     tags = ", ".join(sorted(TagsDriver.get_tags(post_id)))
 
     return render_template("post_page.html", post=post, tags=tags)
+
+
+@app.route("/posts", methods=["GET", "POST"])
+def tag_search():
+
+    tags_search_form = TagSearchForm()
+    has_posts = False
+    empty_search = False
+
+    if tags_search_form.validate_on_submit():
+        tags = tags_search_form.tags.data.split()
+
+        has_posts, post_ids = TagsDriver.search_posts(tags)
+        if len(tags) and not has_posts:
+            empty_search = True
+
+    if has_posts:
+        posts = PostModel.query.filter(PostModel.id.in_(post_ids))
+    else:
+        posts = PostModel.query.order_by(PostModel.date_created.desc())
+
+    return render_template(
+        "posts.html",
+        form=tags_search_form,
+        posts=posts,
+        empty_search=empty_search
+    )
